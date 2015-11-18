@@ -1,0 +1,401 @@
+//PROJECT 3 --- CST 112 EVENING
+
+
+String title=  "CST112 PROJECT 3" ;
+String news=   "Click any ball to reset it to middle half of table.  (r resets all.)";
+String author=  "Rebeca Janowicz";
+String title1 =  " COLLISIONS=";
+
+// BIRD, 5 BALLS PLUS CUE BALL.
+Bird b1;
+Ball a, o, r, j, v,c;
+
+//GLOBALS FOR TABLE 
+float oregon = 50, texas= 400 , dakota= 150, maine = 650;                           // TABLE PERIMETER 
+float midwest= 350;
+boolean wall = true;
+boolean going = false;
+int pooltableR=23, pooltableG=85, pooltableB= 18;     // GREEN POOL TABLE 
+
+int score =0;
+int count = 0;
+
+// GLOBALS FOR BUTTONS 
+float buttonX=0;
+float buttonY=0;
+float buttonW= 100;
+float buttonH= 50;
+
+float buttonX2=0;
+float buttonY2=110;
+float buttonW2= 120;
+float buttonH2= 60;
+float ratX=0;
+float ratY = 480;
+float ratDX = 1;
+
+// SETUP
+
+void setup(){
+   size(700,600);    
+// POOLTABLE  
+   oregon= 50;    texas = 500;   dakota =250;   maine = 650;   midwest= 350;
+  
+    b1 = new Bird ();
+  // BALLS
+    a = new Ball();  a.r=255;  a.name=  "1";
+  //  
+    o = new Ball();  o.g=225;  o.name=  "2";
+  //  
+    r = new Ball();  r.r=200;  r.name=  "3";
+ //   
+    j = new Ball();  j.b=255;  j.name=  "4";
+ //   
+    v = new Ball();  v.g=255;  v.name=  "5";
+ //   
+    c = new Ball();  c.r=255; c.b = 255; c.g = 255;
+    
+ reset();
+}
+
+void reset() {
+  
+ if (wall = true) {   // different than KS he has wall= true
+      score = 0;   
+      pooltableR=23; pooltableG=85; pooltableB= 18;
+//LOCATION OF BALLS
+     a.x = random(midwest, maine);        a.y = random(texas,dakota);
+     o.x = random(midwest, maine);        o.y = random(texas,dakota);
+     r.x = random(midwest, maine);        r.y = random(texas,dakota);
+     j.x = random(midwest, maine);        j.y = random(texas,dakota);
+     v.x = random(midwest, maine);        v.y = random(texas,dakota);
+     c.x = (oregon + maine /3 );          c.y = (texas+dakota)/2;
+
+ 
+// SPEED OF BALLS
+     a.dx = random(1,3);        a.dy = random(1,3);
+     o.dx = random(1,3);        o.dy = random(1,3);
+     r.dx = random(1,3);        r.dy = random(1,3);
+     j.dx = random(1,3);        j.dy = random(1,3);
+     v.dx = random(1,3);        v.dy = random(1,3);
+     c.dx = 0;                  c.dy = 0;
+ }
+}
+
+void draw() {
+      poolTable(oregon, texas, maine,dakota);  
+      balls();
+      message();
+      buttons();
+      rat();
+      grass();
+      clouds();
+      count = count + 1;
+      
+  // BIRD CODE
+      b1. display();
+      b1. move();
+}
+ void balls() {
+  collision( a, o );
+  collision( a, r );
+  collision( a, j);
+  collision( a, v);
+  collision( a, c);
+  //
+  collision( o, r );
+  collision( o, j);
+  collision( o, v);
+  collision( o, c);
+  //
+  collision( r, j );
+  collision( r, v);
+  collision( r, c );
+  //
+  collision( v, c);
+  //
+  a.move();
+  o.move();
+  r.move();
+  j.move();
+  v.move();
+  c.move();
+  //
+  a.show();
+  o.show();
+  r.show();
+  j.show();
+  v.show();
+  c.show();
+}
+
+// Action when two balls collide (adds to score)
+
+ void collision( Ball p, Ball q ) {
+  if ( p.hit( q.x,q.y ) ) {
+    float tmp;
+    tmp=p.dx;  p.dx=q.dx;  q.dx=tmp;      // Swap the velocities.
+    tmp=p.dy;  p.dy=q.dy;  q.dy=tmp;
+    score += 1;
+  }
+}
+ 
+ // if (going) { 
+    
+ // ratX = ratX + 1; }
+//}
+
+// BIRD
+class Bird {
+  float birdX;
+  float birdY;
+  float birdDX; 
+
+Bird () {
+     birdX = 30;
+     birdY = 30;
+     birdDX = 1;
+ 
+}
+// DISPLAY BIRD
+void display () {
+     fill(240,34,61);
+     stroke(0);
+     ellipse(birdX, birdY, 60,10);
+     fill(183,31,34);
+     
+   if(count/30%2 == 0) {
+      triangle(birdX, birdY+5, birdX-10, birdY-20, birdX+15, birdY+5);
+      triangle(birdX, birdY-5, birdX-10, birdY-20, birdX+15, birdY-5);
+   }else { 
+     triangle(birdX, birdY+5, birdX-10, birdY+30, birdX+15, birdY+5);
+     triangle(birdX, birdY-5, birdX-10, birdY+30, birdX+15, birdY-5);
+     }
+     
+     fill(234,171,107);
+     triangle(birdX+30, birdY+2, birdX+40, birdY, birdX+30, birdY-2); 
+    }
+    // MOVE BIRD
+void move() {
+   birdX = birdX + birdDX;
+   if(birdX > width) {
+     birdX = 0;
+   }
+    }
+}
+
+
+  //Grass 
+  void grass() { 
+ stroke(14,118,20);
+ strokeWeight(3);
+ 
+ int grassX = 0;
+   while(grassX < width) {
+    if (count/30 % 2== 0) {
+      line(grassX+10,600,grassX,height-50) ;
+    }else {
+       line(grassX-10,600,grassX,height-50);
+    }
+        grassX = grassX+10; 
+   }
+ }
+ 
+/* Use a "for" loop to display a random number of small clouds drifting left to right above the table.
+ (A new random number of clouds,  from one to seven, 
+ is computed when clouds disappear to the right.)*/
+ 
+ 
+ // CLOUDS
+ void clouds () {
+   for ( int cloud = 0; cloud < width; cloud += 150) {
+      
+     // int stuff = 100;
+        noStroke();
+        fill(225);
+        ellipse(cloud+20, 130, 40,45);
+        ellipse(cloud+10, 150, 80,35);
+        ellipse(cloud+30, 150, 70,50);  
+        
+  }
+ }
+  
+// SHOWING POOL TABLE      
+
+void poolTable(float oregon, float texas, float maine, float dakota)  {
+      background(130,209,219);     
+      rectMode(CORNERS);
+      fill(pooltableR, pooltableG, pooltableB);
+      strokeWeight(20);
+      stroke(108,45,49);
+      rect(oregon,texas,maine, dakota); 
+      fill(255);
+      strokeWeight(20);
+      
+   if (wall== true){
+      float midwest= (oregon+maine)/2;
+      strokeWeight(20);
+      stroke(108,45,49);
+      line(midwest, texas, midwest, dakota);
+   }
+  }  
+ 
+class Ball {
+  float x,y, dx, dy;
+  int r,g,b;
+  int number;
+  String name="";
+  
+  void show() {
+    fill(r,g,b);
+    ellipse( x,y, 30,30);
+    fill(0);
+    text(name, x-3,y+4);
+  }
+  void move() {
+    // WALL COLLISION
+    if (wall= true && x<midwest+23) {
+      dx *= -1;
+    }
+    
+    // BOUNDARY COLLISIONS
+    x += dx;
+    if (x> oregon|| x< maine) { dx = -dx; }
+    y += dy;
+    if (y>texas || y< dakota) { dy = -dy; }
+  }
+
+  void reset() {
+  x= random(midwest+40, oregon); y= random(dakota, texas);
+  dx=  random( -3,3 );   dy=  random( -3,3 );
+  }
+  
+  // BALL COLLISIONS
+  boolean hit( float x, float y ) {
+    if (dist( x,y, this.x,this.y ) < 30 ) return true;
+    else return false;
+  }  
+}
+
+     
+  // MESSAGES 
+    void message() {
+      fill(0);
+      stroke(0);
+      textSize(15);
+      text( title, 200, 20 );
+      text( news, 200, 40);
+      text( author,10,540);
+      textSize(20);
+      text(score,width/2-10,height-525);
+      text(title1,200,height-525);
+  }
+  
+  // BUTTONS CONTROL CODE
+  void buttons() {
+  noStroke();
+  fill(108,45,49);
+  rect(buttonX, buttonY, buttonW, buttonH);
+  fill(255);
+  text("RESET", buttonX+20, buttonY+35);
+  // REMOVE WALL    
+  noStroke();
+  fill(108,45,49);
+  rect(buttonX2, buttonY2, buttonW2, buttonH2);
+  fill(255);
+  text("remove wall", buttonX2, buttonY2-10);
+  }
+
+// RAT   
+ void rat() {  
+    strokeWeight(1);
+    stroke(0);
+    fill(155);                                  // ear and body's fill
+    ellipse(ratX,ratY-10,40,30 );                // rat's body
+    ellipse(ratX+10,ratY-27,15,15);             // ear
+    fill(95,62,21);                            // tail color
+    ellipse(ratX-25,ratY-15,10,1);              // tail
+    fill(95,62,21);                            // ear color
+    fill(0);                                   // eye, nose color
+    ellipse(ratX+10,ratY-15,5,3);              // eye
+    ellipse(ratX+20,ratY-5,5,5);              // nose
+
+// RAT LEGS
+   float leg1=ratX+10, leg2=ratX-15;
+
+   strokeWeight(5);
+   stroke(0); 
+   if (count/30 % 2 == 0) {
+      line(leg1,ratY, leg1,ratY+10);
+      line(leg2,ratY, leg2,ratY+10);
+   } else{
+      line(leg1,ratY, leg1-5,ratY+10);
+      line(leg2,ratY, leg2-5,ratY+10);
+   }
+   strokeWeight(1);
+ }
+ 
+  void mousePressed() {
+
+   if ((mouseX < buttonX + buttonW &&
+        mouseX > buttonX)&&
+       (mouseY < buttonY + buttonH &&
+        mouseY > buttonY )) {
+        reset();
+        
+     } else if 
+  // RESTORES THE WALL      ( although is not working). 
+       (mouseX < buttonX2 + buttonW2 ||
+        mouseY < buttonY2 + buttonH2 )
+         {  wall = false;
+     
+            
+      // RESET THE BALLS RANDOMLY      
+      } else if 
+          (mouseX <= x &&  mouseY <= y) 
+          {x= random(midwest, maine);   x= random(texas, dakota);   
+         
+      } else if 
+          (mouseX <= x &&
+           mouseY <= y) 
+         {x= random(midwest, maine);   x= random(texas, dakota); 
+         
+      } else if 
+          (mouseX <= x &&
+           mouseY <= y) 
+         {  x= random(midwest, maine);   y= random(texas, dakota); }
+       
+         
+  }
+    
+
+  void keyPressed() {
+
+    
+   if (key == 'r') reset();
+   if (key == 'w') { wall=false; }
+   if (key == 'q') { exit();  }
+   if (key == 'p') { pooltableR=252;  pooltableG=176; pooltableB= 235; }
+   if ( key =='m' ){ going = true ; 
+ } else {
+        going = false;
+      }
+  
+       if (key == '1') {  rx= random(midwest, maine);   rY= random(texas, dakota);   } 
+     
+       if (key == '2') {  jx= random(midwest, maine);    jy= random(texas, dakota);    } 
+       
+       if (key == '3') {  vx= random(midwest, maine);  vy= random(texas, dakota);  }
+       
+    /*   // THIS IS EXTRA. IT WILL RESET THE BALLS RANDOMLY IF WALL IS REMOVE. 
+     
+   if (wall ==false) {
+     
+       if (key == '1') { rx= random(oregon, maine);   rY= random(texas, dakota);     } 
+   
+       if (key == '2') { jx= random(oregon, maine);    jy= random(texas, dakota);      } 
+    
+       if (key == '3') { vx= random(oregon, maine);  vy= random(texas, dakota);    }
+    }*/
+
+   }
