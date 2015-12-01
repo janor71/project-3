@@ -8,14 +8,15 @@ String s=" Press b= drop bomb, r= reset balls, wall, table color, p= pink table!
 String ss="mouseclick each ball to reset";
 
 Ball a,b,c,d,e,cue;
-
+//Button af,bg,ch,dj, pk, rl;
 // BIRD, RAT
  Bird p; Rat r;
 int pooltableR=23, pooltableG=85, pooltableB= 18;     // GREEN POOL TABLE 
 float oregon = 50, texas= 500 , dakota= 250, maine = 650;    // TABLE PERIMETER 
 float midwest= 350;
 boolean wall = true;
-boolean going = false;
+boolean rat = true; // trying it out
+//boolean going = false;
 float ratX;
 float ratY;
 
@@ -83,21 +84,22 @@ void draw() {
       r.move();
       count= count +1;
       textSize(12);
+      text( title, 10, 530 );
       text( s, 150,20 );
       text(ss, 150,60);
-  
+      text( author,10,545);
+      text(title1,150,230);
+      text(score,200,230);
 }
  // MESSAGES 
-  void message() {
+ void message() {
       fill(0);
       stroke(0);
       textSize(15);
       text( title, 200, 20 );
       text( news, 200, 40);
-      text( author,10,540);
       textSize(20);
-      text(score,width/2-10,height-525);
-      text(title1,200,height-525);
+     
   }
   
 //SHOWING POOL TABLE   
@@ -290,8 +292,8 @@ boolean hit( float birdX, float birdY ) {
  } 
 // RAT 
   class Rat {
-  //  float ratX;
-   // float ratY;
+  //  float ratX;  // I want to declare them here and use them
+   // float ratY;  //  for ball-rat code collision
     float ratDX;
     float ratDY;
   Rat(){
@@ -305,6 +307,7 @@ boolean hit( float birdX, float birdY ) {
 }
  void display () {  
  // if (ratX > oregon) {
+   if (rat == true){ // if boolean is true 
       strokeWeight(1);
       stroke(0);
       fill(155);  // ear and body's fill
@@ -331,13 +334,13 @@ boolean hit( float birdX, float birdY ) {
    }
    strokeWeight(1);
  }
-
+ }  // part of the boolean expression
 
 void move(){
   //Rat walks across the pool table
   
       ratX = ratX + ratDX; 
-   if ( ratX > maine) { reset (); }
+   if ( ratX >= maine) { reset (); }
    
   // Rat should bounce     
       ratY += ratDY;
@@ -348,7 +351,7 @@ void move(){
   } 
   void reset () {
     ratX = 50; 
-    ratY = random(400,500);
+    //ratY = random(400,500);
     ratDX= 1;
   } 
  } 
