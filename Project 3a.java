@@ -5,6 +5,7 @@ String news= "Click any ball to reset it to middle half of table.(r resets all, 
 String author=  "Rebeca Janowicz";
 String title1 =  " Score=";
 String s=" Press b= drop bomb, r= reset balls, wall, table color, p= pink table! \n w= remove wall and q= exit";
+String ss="mouseclick each ball to reset";
 
 Ball a,b,c,d,e,cue;
 
@@ -15,6 +16,8 @@ float oregon = 50, texas= 500 , dakota= 250, maine = 650;    // TABLE PERIMETER
 float midwest= 350;
 boolean wall = true;
 boolean going = false;
+float ratX;
+float ratY;
 
 int score;
 int count = 0;
@@ -56,7 +59,7 @@ void setup() {
     e.reset();
     cue.reset();
   //
-    p.reset(); //p. drop();
+    p.reset(); 
     r.reset ();
   // Reseit table color to green
     pooltableR=23; pooltableG=85; pooltableB= 18;
@@ -81,6 +84,7 @@ void draw() {
       count= count +1;
       textSize(12);
       text( s, 150,20 );
+      text(ss, 150,60);
   
 }
  // MESSAGES 
@@ -114,7 +118,7 @@ void draw() {
    }
   }  
  
-//// Move & show each ball
+//MOVE & SHOW EACH BALL CODE
 void balls() {
       collision( a, b );
       collision( a, c );
@@ -177,6 +181,7 @@ class Ball {
     textSize(12);
     text( name, x-5,y );
   }
+// BALLS BOUNCE AROUND  
   void move() {
     if (wall == true){
        x += dx; 
@@ -194,17 +199,19 @@ class Ball {
        y += dy; 
      if (y > texas  || y < dakota)  dy *= -1;
    }
+// collision of balls with rat    
+
+if ( dist(x,y, ratX,ratY) <30) { 
+    ratX += 15; dx=-1; dy=-1;
+    score -= 10; 
   }
+ }
  void reset() {
-   if  (wall = true) {
-  //  a.reset(); b.reset(); c.reset(); d.reset(); e.reset(); cue.reset();
-         
-}
+
     x= random(midwest+20, maine); y= random(dakota, texas);
-  dx=  random(1,3);   dy=  random(1,3);
+    dx=  random(1,3);   dy=  random(1,3);
   }
-  
-  // BALL COLLISIONS
+// BALL COLLISIONS
   boolean hit( float x, float y ) {
     if (dist( x,y, this.x,this.y ) < 30 ) return true;
     else return false;
@@ -283,8 +290,8 @@ boolean hit( float birdX, float birdY ) {
  } 
 // RAT 
   class Rat {
-    float ratX;
-    float ratY;
+  //  float ratX;
+   // float ratY;
     float ratDX;
     float ratDY;
   Rat(){
@@ -345,13 +352,8 @@ void move(){
     ratDX= 1;
   } 
  } 
- /* if ( dist(a.x,a.y, ratX,ratY) < 10) { ratX += 15; a.dx=0; a.dy=0; score -= 10; }
-  if ( dist(b.x,b.y, ratX,ratY) < 10) { ratX += 15; b.dx=0; b.dy=0; score -= 10; }
-  if ( dist(c.x,c.y, ratX,ratY) < 10) { ratX += 15; c.dx=0; c.dy=0; score -= 10; }
-  if ( dist(d.x,d.y, ratX,ratY) < 10) { ratX += 15; d.dx=0; d.dy=0; score -= 10; }
-  if ( dist(e.x,e.y, ratX,ratY) < 10) { ratX += 15; e.dx=0; e.dy=0; score -= 10; }
-  if ( dist(cue.x,cue.y, ratX,ratY) < 10) { ratX += 15; cue.dx=0; cue.dy=0; score -= 10; }
-*/
+
+
  // CLOUDS
  void clouds () {
    for ( int cloud = 0; cloud < width; cloud += 150) 
@@ -385,6 +387,16 @@ void keyPressed() {
    if (key == 'w') { wall=!true;}
    if (key == 'q') { exit();  }
    if (key == 'p') { pooltableR=252;  pooltableG=176; pooltableB= 235; }
-   /*if ( key =='m' ){ going = true ; 
-   } else { going = false; }*/
+   
  }
+ void mouseClicked() {
+  if ( dist(a.x,a.y, mouseX,mouseY) < 30) { a.reset(); score -= 5; }
+  if ( dist(b.x,b.y, mouseX,mouseY) < 30) { b.reset(); score -= 5; }
+  if ( dist(c.x,c.y, mouseX,mouseY) < 30) { c.reset(); score -= 5; }
+  if ( dist(d.x,d.y, mouseX,mouseY) < 30) { d.reset(); score -= 5; }
+  if ( dist(e.x,e.y, mouseX,mouseY) < 30) { e.reset(); score -= 5; }
+  if ( dist(cue.x,cue.y, mouseX,mouseY) < 18) { 
+    cue.x= (oregon+maine)/4;cue.y= (dakota+texas)/2;
+    cue.dx= 0;              cue.dy= 0; }  
+ }
+ 
